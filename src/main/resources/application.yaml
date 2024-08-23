@@ -1,0 +1,18 @@
+server:
+  port: 8085
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://divinex:qiwTHEeeJVj2M3dp@divinex.txdcsgc.mongodb.net/divinex?retryWrites=true&w=majority
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 100MB
+  client:
+    ms-storage:
+      url: https://vg-ms-storage-production.up.railway.app
+    ms-user:
+      url: https://vg-ms-user-production.up.railway.app/api/users
+    ms-notification-gmail:
+      url: https://vg-notification-gmail-production.up.railway.app
