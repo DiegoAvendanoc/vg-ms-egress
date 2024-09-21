@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class VgMsEgressApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(VgMsEgressApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(VgMsEgressApplication.class, args);
+    }
 
 }

@@ -1,4 +1,5 @@
 package pe.edu.vallegrande.vg_ms_egress.domain.dto;
+
 import lombok.Data;
 
 @Data

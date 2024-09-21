@@ -1,4 +1,5 @@
 package pe.edu.vallegrande.vg_ms_egress.application.service;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pe.edu.vallegrande.vg_ms_egress.domain.model.Category;

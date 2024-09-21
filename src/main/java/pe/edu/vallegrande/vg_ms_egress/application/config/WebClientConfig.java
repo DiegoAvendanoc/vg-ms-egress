@@ -1,6 +1,7 @@
 package pe.edu.vallegrande.vg_ms_egress.application.config;
 
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration

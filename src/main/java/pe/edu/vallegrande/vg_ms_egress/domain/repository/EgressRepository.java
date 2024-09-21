@@ -6,4 +6,5 @@ import pe.edu.vallegrande.vg_ms_egress.domain.model.Egress;
 
 @Repository
 public interface EgressRepository extends ReactiveMongoRepository<Egress, String> {
+
 }

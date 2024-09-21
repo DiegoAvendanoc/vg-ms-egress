@@ -3,7 +3,6 @@ package pe.edu.vallegrande.vg_ms_egress.application.webclient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
-
 import pe.edu.vallegrande.vg_ms_egress.domain.dto.User;
 import reactor.core.publisher.Mono;
 
@@ -15,9 +14,10 @@ public class UserWebClient {
     public UserWebClient(WebClient.Builder webClientBuilder, @Value("${spring.client.ms-user.url}") String msUserUrl) {
         this.webClient = webClientBuilder.baseUrl(msUserUrl).build();
     }
+
     public Mono<User> getUserById(String id) {
         return webClient.get()
-                .uri("/{id}", id)
+                .uri("/management/user/v1/details/id/{id}", id)
                 .retrieve()
                 .bodyToMono(User.class);
     }

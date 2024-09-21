@@ -1,6 +1,5 @@
 package pe.edu.vallegrande.vg_ms_egress.application.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,12 +17,14 @@ import pe.edu.vallegrande.vg_ms_egress.domain.repository.EgressRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static pe.edu.vallegrande.vg_ms_egress.application.util.Constant.*;
+import static pe.edu.vallegrande.vg_ms_egress.application.util.Constant.FOLDER_NAME;
+import static pe.edu.vallegrande.vg_ms_egress.application.util.Constant.PENDING;
 
 @Slf4j
 @Service
@@ -32,10 +33,9 @@ public class EgressService {
 
     private final UserWebClient userWebClient;
     private final NotificationWebClient notificationWebClient;
-    private final CategoryRepository categoryRepository;
-    private final EgressRepository egressRepository;
     private final StorageWebClient storageWebClient;
-
+    private final EgressRepository egressRepository;
+    private final CategoryRepository categoryRepository;
 
     public Flux<Egress> listAllEgress() {
         return egressRepository.findAll()
@@ -76,7 +76,7 @@ public class EgressService {
     }
 
     public Mono<ResponseEntity<Egress>> updateEgress(String egressId, AdminEgressDto adminDto) {
-        log.info("EDITANDO Egreso");
+        log.info("EDITANDO EGRESO");
 
         return egressRepository.findById(egressId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Egress not found")))
@@ -91,18 +91,17 @@ public class EgressService {
         egress.setCategoryId(userDto.getCategoryId());
         egress.setType('E');
         egress.setFileUrls(List.of());
-        egress.setStatusPayment(ACCEPT);
+        egress.setStatusPayment(PENDING);
         egress.setStatusNotification(false);
         egress.setCreatedAt(LocalDateTime.now());
         egress.setUpdatedAt(LocalDateTime.now());
         return egress;
     }
 
-
     private Mono<Egress> updateEgressDetails(Egress egress, AdminEgressDto adminDto) {
         egress.setComment(adminDto.getComment());
         egress.setStatusPayment(adminDto.getStatusPayment());
-        egress.setUserConfirmedId(adminDto.getUserConfirmedId());
+        egress.setPersonConfirmedId(adminDto.getPersonConfirmedId());
         egress.setUpdatedAt(LocalDateTime.now());
         return egressRepository.save(egress);
     }
@@ -118,11 +117,11 @@ public class EgressService {
                             .flatMap(notificationResponse -> {
                                 egress.setStatusNotification(notificationResponse.isSuccess());
                                 return egressRepository.save(egress)
-                                        .map(updatedEgress -> new ResponseEntity<>(updatedEgress, HttpStatus.OK));
+                                        .map(updatedEgress-> new ResponseEntity<>(updatedEgress, HttpStatus.OK));
                             });
                 })
                 .onErrorResume(e -> {
-                    log.error("Error updating egress: ", e);
+                    log.error("Error updating Egress: ", e);
                     return Mono.just(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
                 });
     }
@@ -133,8 +132,8 @@ public class EgressService {
         Mono<User> personMono = egress.getPersonId() != null ? userWebClient.getUserById(egress.getPersonId())
                 : Mono.just(emptyUser);
 
-        Mono<User> personConfirmedMono = egress.getUserConfirmedId() != null
-                ? userWebClient.getUserById(egress.getUserConfirmedId())
+        Mono<User> personConfirmedMono = egress.getPersonConfirmedId() != null
+                ? userWebClient.getUserById(egress.getPersonConfirmedId())
                 : Mono.just(emptyUser);
 
         return Mono.zip(personMono, personConfirmedMono);
@@ -142,8 +141,8 @@ public class EgressService {
 
     private Mono<Tuple2<User, User>> retrieveUsers(Egress egress, AdminEgressDto adminDto) {
         Mono<User> personMono = userWebClient.getUserById(egress.getPersonId());
-        Mono<User> personConfirmedMono = adminDto.getUserConfirmedId() != null
-                ? userWebClient.getUserById(adminDto.getUserConfirmedId())
+        Mono<User> personConfirmedMono = adminDto.getPersonConfirmedId() != null
+                ? userWebClient.getUserById(adminDto.getPersonConfirmedId())
                 : Mono.empty();
         return Mono.zip(personMono, personConfirmedMono);
     }
