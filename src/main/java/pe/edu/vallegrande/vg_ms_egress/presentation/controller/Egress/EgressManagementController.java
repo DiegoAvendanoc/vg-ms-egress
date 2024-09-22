@@ -9,7 +9,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
-@CrossOrigin
 @RequestMapping("management/egress/v1")
 public class EgressManagementController {
     private final EgressService egressService;
