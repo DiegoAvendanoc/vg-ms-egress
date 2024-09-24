@@ -11,14 +11,14 @@ import org.springframework.context.annotation.Configuration;
 public class OpenAPIConfig {
 
     @Bean
-    public OpenAPI userServiceAPI() {
+    public OpenAPI egressServiceAPI() {
         return new OpenAPI()
-                .info(new Info().title("API de Servicio de Usuario")
-                        .description("Esta es la API REST para el Servicio de Usuario")
+                .info(new Info().title("API de Servicio de Egreso")
+                        .description("Esta es la API REST para el Servicio de Egreso")
                         .version("v0.0.1")
                         .license(new License().name("Apache 2.0")))
                 .externalDocs(new ExternalDocumentation()
-                        .description("Documentación Wiki del Servicio de Usuario")
+                        .description("Documentación Wiki del Servicio de Egreso")
                         .url("https://divinex/docs"));
     }
 }
